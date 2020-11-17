@@ -1,0 +1,2 @@
+certifi==2020.6.20
+tabulate==0.8.7
