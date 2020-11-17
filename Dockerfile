@@ -19,4 +19,4 @@ CMD python -m ptvsd --host 0.0.0.0 --port 5678 --wait solver.py
 ###########START NEW IMAGE: PRODUCTION ###################
 FROM base as prod
 
-CMD flask run -h 0.0.0 -p 5000
+CMD python -m solver.py
