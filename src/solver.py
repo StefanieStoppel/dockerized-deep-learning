@@ -2,18 +2,26 @@ import math
 from tabulate import tabulate
 
 
-class Solver:
-
-    def demo(self, a, b, c):
-        return a * b * c
+def Fibonacci(n):
+    if n<=0:
+        print("Incorrect input")
+    # First Fibonacci number is 0
+    elif n==1:
+        return 0
+    # Second Fibonacci number is 1
+    elif n==2:
+        return 1
+    else:
+        return Fibonacci(n-1)+Fibonacci(n-2)
 
 if __name__ == '__main__':
-    solver = Solver()
-
-while True:
-    a = int(input("a: "))
-    b = int(input("b: "))
-    c = int(input("c: "))
-    result = solver.demo(a, b, c)
-    table = [("a", a), ("b", b), ("c", c), ("result", result)]
-    print(tabulate(table))
+    n = 1
+    while True:
+        result = Fibonacci(n)
+        table = [("n", n), ("fibonacci", result)]
+        print(tabulate(table))
+        print()
+        n += 1
+        if n == 10:
+            print("Bye!")
+            break
