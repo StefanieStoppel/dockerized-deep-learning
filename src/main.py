@@ -1,6 +1,54 @@
-import mlflow
-import optuna
-from optimization import objective
+import torch
+import torch.optim as optim
+
+from torch.optim.lr_scheduler import StepLR
+from dataloaders import get_mnist_dataloaders
+from neural_network import Net
+from training import train, validate
+
+
+def objective(options=None):
+    # Initialize the best validation loss, which is the value to be minimized by the network
+    best_val_loss = float("Inf")
+
+    # Define hyperparameters
+    lr = 0.001
+    dropout = 0.3
+    batch_size = 128
+    print(f"")
+
+    # Use CUDA if GPU is available, else CPU
+    use_cuda = options["use_cuda"] and torch.cuda.is_available()
+    device = torch.device("cuda" if use_cuda else "cpu")
+    print(f"Using device {device}")
+
+    # Obtain the MNIST train and validation loaders using a helper function
+    train_loader, val_loader = get_mnist_dataloaders(batch_size)
+
+    # Initialize network
+    model = Net(dropout=dropout).to(device)
+
+    # Learning rate optimizer
+    optimizer = optim.Adam(model.parameters(), lr=lr)
+    scheduler = StepLR(optimizer, step_size=1, gamma=0.7)
+
+    # Network training & validation loop
+    for epoch in range(0, options["epochs"]):
+        avg_train_loss = train(
+            options, model, device, train_loader, optimizer, epoch
+        )
+        avg_val_loss = validate(model, device, val_loader)
+
+        if avg_val_loss <= best_val_loss:
+            best_val_loss = avg_val_loss
+
+        # Print intermediate validation & training loss
+        print(f"Epoch {epoch + 1} of {options['epochs']} --- average train loss: {avg_train_loss} --- average validation loss: {avg_val_loss}")
+
+        scheduler.step()
+
+    # Return the best validation loss
+    return best_val_loss
 
 
 def main():
@@ -13,46 +61,12 @@ def main():
         "log_interval": 10,
         "save_model": True,
     }
+    print("Options: ")
+    for key, value in options.items():
+        print(f"    {key}: {value}")
 
-    # Create mlflow experiment if it doesn't exist already
-    experiment_name = options["experiment_name"]
-    mlflow.set_tracking_uri(options["tracking_uri"])
-    experiment = mlflow.get_experiment_by_name(experiment_name)
-    if experiment is None:
-        mlflow.create_experiment(experiment_name)
-        experiment = mlflow.get_experiment_by_name(experiment_name)
-    mlflow.set_experiment(experiment_name)
-
-    # Propagate logs to the root logger.
-    optuna.logging.set_verbosity(verbosity=optuna.logging.INFO)
-
-    # Create the optuna study which shares the experiment name
-    study = optuna.create_study(study_name=experiment_name, direction="minimize")
-    study.optimize(lambda trial: objective(trial, experiment, options), n_trials=5)
-
-    # Filter optuna trials by state
-    pruned_trials = [
-        t for t in study.trials if t.state == optuna.trial.TrialState.PRUNED
-    ]
-    complete_trials = [
-        t for t in study.trials if t.state == optuna.trial.TrialState.COMPLETE
-    ]
-
-    print("\n++++++++++++++++++++++++++++++++++\n")
-    print("Study statistics: ")
-    print("  Number of finished trials: ", len(study.trials))
-    print("  Number of pruned trials: ", len(pruned_trials))
-    print("  Number of complete trials: ", len(complete_trials))
-
-    print("Best trial:")
-    trial = study.best_trial
-
-    print("  Trial number: ", trial.number)
-    print("  Loss (trial value): ", trial.value)
-
-    print("  Params: ")
-    for key, value in trial.params.items():
-        print("    {}: {}".format(key, value))
+    # Run training
+    objective(options)
 
 
 if __name__ == "__main__":
