@@ -7,6 +7,7 @@ COPY ./requirements.txt /work/requirements.txt
 RUN pip install -r requirements.txt
 
 COPY ./src/ /work/
+# Download the MNIST data set
 
 ###########START NEW IMAGE : DEBUGGER ###################
 FROM base as debug

@@ -15,7 +15,9 @@ def objective(options=None):
     lr = 0.001
     dropout = 0.3
     batch_size = 128
-    print(f"")
+    print(f"Learning rate: {lr}")
+    print(f"Dropout: {dropout}")
+    print(f"Batch size: {batch_size}")
 
     # Use CUDA if GPU is available, else CPU
     use_cuda = options["use_cuda"] and torch.cuda.is_available()
