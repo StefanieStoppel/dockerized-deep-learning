@@ -23,7 +23,7 @@ def objective(options=None):
     print(f"Using device {device}")
 
     # Obtain the MNIST train and validation loaders using a helper function
-    train_loader, val_loader = get_mnist_dataloaders(batch_size)
+    train_loader, val_loader = get_mnist_dataloaders(options["data_path"], batch_size)
 
     # Initialize network
     model = Net(dropout=dropout).to(device)
@@ -59,7 +59,7 @@ def main():
         "epochs": 2,
         "use_cuda": False,
         "log_interval": 10,
-        "save_model": True,
+        "data_path": "/data"
     }
     print("Options: ")
     for key, value in options.items():
