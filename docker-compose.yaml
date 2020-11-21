@@ -12,5 +12,6 @@ services:
     #tty: true               #comment out for build.target:prod
     volumes:
     - ./src/:/work
+    - ./mlruns/:/mlruns
     ports:
       - 5678:5678
