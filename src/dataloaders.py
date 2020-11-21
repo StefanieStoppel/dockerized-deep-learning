@@ -3,7 +3,17 @@ from torchvision import datasets, transforms
 
 
 def get_mnist_dataloaders(data_path="/data", batch_size=8):
-    # Load the MNIST train and test datasets and save them to ./data
+    # Load the MNIST train and test datasets and save them under data_path
+    mnist_train, mnist_test = get_mnist_data_sets(data_path)
+
+    train_loader = torch.utils.data.DataLoader(
+        mnist_train, batch_size=batch_size, shuffle=True
+    )
+    val_loader = torch.utils.data.DataLoader(mnist_test, batch_size=1000, shuffle=True)
+    return train_loader, val_loader
+
+
+def get_mnist_data_sets(data_path="/data"):
     mnist_train = datasets.MNIST(
         data_path,
         train=True,
@@ -11,9 +21,6 @@ def get_mnist_dataloaders(data_path="/data", batch_size=8):
         transform=transforms.Compose(
             [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
         ),
-    )
-    train_loader = torch.utils.data.DataLoader(
-        mnist_train, batch_size=batch_size, shuffle=True
     )
     mnist_test = datasets.MNIST(
         data_path,
@@ -23,5 +30,4 @@ def get_mnist_dataloaders(data_path="/data", batch_size=8):
             [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
         ),
     )
-    val_loader = torch.utils.data.DataLoader(mnist_test, batch_size=1000, shuffle=True)
-    return train_loader, val_loader
+    return mnist_train, mnist_test
