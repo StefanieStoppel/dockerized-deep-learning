@@ -4,3 +4,5 @@
 
 # MLflow directories
 mlruns
+
+__pycache__
