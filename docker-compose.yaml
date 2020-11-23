@@ -2,6 +2,10 @@ version: "3.4"
 services: 
   ddl: #docker run -it -v ${PWD}:/work -w /work -p 5003:5000 aimvector/python:1.0.0 /bin/sh
     container_name: docker-deep-learning
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
     build:
       context: ./
       target: debug
