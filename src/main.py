@@ -56,10 +56,8 @@ def objective(options=None):
 def main():
     # Experiment options
     options = {
-        "tracking_uri": "file:/mlruns",
-        "experiment_name": "debugging-optuna-mlflow",
         "epochs": 2,
-        "use_cuda": False,
+        "use_cuda": True,
         "log_interval": 10,
         "data_path": "/data"
     }
