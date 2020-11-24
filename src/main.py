@@ -65,8 +65,12 @@ def main():
     for key, value in options.items():
         print(f"    {key}: {value}")
 
-    # Run training
-    objective(options)
+    # Run training and return the best achieved validation loss
+    best_val_loss = objective(options)
+
+    print("Finished training.")
+    print(f"Best validation loss: {best_val_loss}")
+    print("---------------------------------------------------------------")
 
 
 if __name__ == "__main__":
