@@ -1,12 +1,10 @@
+########### Base image ###########
 FROM pytorch/pytorch:1.7.0-cuda11.0-cudnn8-devel as base
 
 ENV DATA_PATH="/data"
 
-RUN mkdir /work/ ${DATA_PATH}
+RUN mkdir -p /work/ ${DATA_PATH}
 WORKDIR /work/
-
-COPY ./requirements.txt /work/requirements.txt
-RUN pip install -r requirements.txt
 
 COPY ./src/ /work/
 
@@ -16,14 +14,14 @@ COPY ./src/ /work/
 # Read more about this here: https://docs.docker.com/storage/
 RUN python -c "from dataloaders import get_mnist_data_sets; get_mnist_data_sets('${DATA_PATH}')"
 
-###########START NEW IMAGE : DEBUGGER ###################
+########### START NEW IMAGE : DEBUGGER ###################
 FROM base as debug
 RUN pip install ptvsd
 
 WORKDIR /work/
 CMD python -m ptvsd --host 0.0.0.0 --port 5678 --wait main.py
 
-###########START NEW IMAGE: PRODUCTION ###################
+########### START NEW IMAGE: PRODUCTION ###################
 FROM base as prod
 
 CMD python -m main.py
