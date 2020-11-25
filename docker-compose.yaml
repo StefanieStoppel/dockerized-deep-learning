@@ -2,7 +2,9 @@ version: "3.8"
 services:
   ddl:
     container_name: docker-deep-learning-debug
-    # The following lines define the NVIDIA runtime and give the container access to all available GPU devices on the host.
+    # The following lines define the NVIDIA runtime and give the container 
+    # access to all available GPU devices on the host.
+    # INFO: comment them out if you don't have access to a GPU, as the container will not start otherwise.
     runtime: nvidia
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
