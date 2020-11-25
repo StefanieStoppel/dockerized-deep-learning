@@ -1,5 +1,5 @@
 # dockerized-deep-learning
-## Debugging Deep Learning Docker Containers
+## 🐛️🧠️🐋️ Debugging Deep Learning Docker Containers
 This repo goes hand in hand with [this Medium post I wrote]().
 
 ### Getting started
