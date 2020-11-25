@@ -1,4 +1,4 @@
-import torch
+from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
 
@@ -6,10 +6,10 @@ def get_mnist_dataloaders(data_path="/data", batch_size=8):
     # Load the MNIST train and test datasets and save them under data_path
     mnist_train, mnist_test = get_mnist_data_sets(data_path)
 
-    train_loader = torch.utils.data.DataLoader(
+    train_loader = DataLoader(
         mnist_train, batch_size=batch_size, shuffle=True
     )
-    val_loader = torch.utils.data.DataLoader(mnist_test, batch_size=1000, shuffle=True)
+    val_loader = DataLoader(mnist_test, batch_size=1000, shuffle=True)
     return train_loader, val_loader
 
 
