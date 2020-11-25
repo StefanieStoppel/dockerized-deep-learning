@@ -8,6 +8,9 @@ ENV DATA_PATH="/data"
 RUN mkdir -p /work/ ${DATA_PATH}
 WORKDIR /work/
 
+# Copy the Python source code into the image
+COPY ./src /work/
+
 # Install the Python debugger debugpy by Microsoft
 RUN pip install debugpy
 
