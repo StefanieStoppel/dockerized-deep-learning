@@ -1,9 +1,8 @@
-name: debugging-docker
+name: docker-deep-learning
 channels:
   - conda-forge
   - defaults
 dependencies:
   - python>=3.7
-  - black
   - pytorch
   - torchvision
