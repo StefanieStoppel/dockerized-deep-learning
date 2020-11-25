@@ -1,27 +1,21 @@
-########### Base image ###########
-FROM pytorch/pytorch:1.7.0-cuda11.0-cudnn8-devel as base
+# Use a base image which contains PyTorch 1.7.0, CUDA 11.0 and cuDNN 8 (CUDA Deep Neural Network library)
+FROM pytorch/pytorch:1.7.0-cuda11.0-cudnn8-devel
 
+# Specify where our MNIST data set should be downloaded to
 ENV DATA_PATH="/data"
 
+# Create /work and /data directories
 RUN mkdir -p /work/ ${DATA_PATH}
 WORKDIR /work/
 
-COPY ./src/ /work/
+# Install the Python debugger debugpy by Microsoft
+RUN pip install debugpy
 
 # Download the MNIST data set to ${DATA_PATH} using our custom Python function.
 # If we don't do this here, the data set will be re-downloaded every time we run the container,
-# since the container's file storage isn't persisted after it's removed.
-# Read more about this here: https://docs.docker.com/storage/
+# since the container's file storage isn't persisted after it terminates.
+# Read more about persisting files here: https://docs.docker.com/storage/
 RUN python -c "from dataloaders import get_mnist_data_sets; get_mnist_data_sets('${DATA_PATH}')"
 
-########### START NEW IMAGE : DEBUGGER ###################
-FROM base as debug
-RUN pip install ptvsd
-
-WORKDIR /work/
-CMD python -m ptvsd --host 0.0.0.0 --port 5678 --wait main.py
-
-########### START NEW IMAGE: PRODUCTION ###################
-FROM base as prod
-
-CMD python -m main.py
+# Python debug command that is run when starting the container
+CMD python -m debugpy --listen 0.0.0.0:5678 --wait-for-client main.py
