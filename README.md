@@ -1,6 +1,6 @@
 # dockerized-deep-learning
 ## 🐛️🧠️🐋️ Debugging Deep Learning Docker Containers
-This repo goes hand in hand with [this Medium post I wrote]().
+This repo goes hand in hand with [this Medium post I wrote](https://qbrid.medium.com/debugging-deep-learning-docker-containers-3815a44c9519).
 
 ### Getting started
 Clone this project: `git clone git@github.com:StefanieStoppel/dockerized-deep-learning.git`.
